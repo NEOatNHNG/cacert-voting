@@ -1,0 +1,11 @@
+# Ignore hidden files unless explicitly tracked
+.*
+
+# Ignore compiled python code
+*.py[co]
+
+# Don't expose database settings, especially credentials
+/cacert_voting/db_settings.py
+
+# Don't version control sqlite database if present
+/db.sqlite
