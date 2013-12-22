@@ -24,17 +24,22 @@ TIME_ZONE = 'Etc/UTC'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-au'
 
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+USE_L10N = False
+
+# Use international date format
+DATE_FORMAT = SHORT_DATE_FORMAT = 'D Y-m-d'
+DATETIME_FORMAT = SHORT_DATETIME_FORMAT = 'Y-m-d H:i e'
+TIME_FORMAT = 'H:i e'
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
@@ -98,10 +103,14 @@ ROOT_URLCONF = 'cacert_voting.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'cacert_voting.wsgi.application'
 
+from os import path
+PROJECT_PATH = path.abspath(path.dirname(__file__))
+
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    path.join(PROJECT_PATH, 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -112,7 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'cacert_motions',
