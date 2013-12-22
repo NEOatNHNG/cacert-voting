@@ -9,8 +9,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-from . import db_settings
-DATABASES = db_settings.DATABASES
+from . import private_settings
+DATABASES = private_settings.DATABASES
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -79,7 +79,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '2%w0plkg1pk(p%ev4&*2)s*yau@dewvu%&d$3l_bxyac94lajc'
+SECRET_KEY = private_settings.SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

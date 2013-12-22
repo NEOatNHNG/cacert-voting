@@ -1,5 +1,5 @@
 # Database settings sample file
-# copy to db_settings.py to use it
+# copy to private_settings.py to use it
 
 DATABASES = {
     'default': {
@@ -12,3 +12,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '2%w0plkg1pk(p%ev4&*2)s*yau@dewvu%&d$3l_bxyac94lajc'

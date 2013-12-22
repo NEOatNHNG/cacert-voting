@@ -4,8 +4,8 @@
 # Ignore compiled python code
 *.py[co]
 
-# Don't expose database settings, especially credentials
-/cacert_board/db_settings.py
+# Don't expose database settings, especially credentials and other stuff
+/cacert_board/private_settings.py
 
 # Don't version control sqlite database if present
 /db.sqlite
