@@ -6,8 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'cacert_voting.views.home', name='home'),
-    # url(r'^cacert_voting/', include('cacert_voting.foo.urls')),
+    # url(r'^$', 'cacert_board.views.home', name='home'),
+    # url(r'^cacert_board/', include('cacert_board.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

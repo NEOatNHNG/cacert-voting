@@ -1,4 +1,4 @@
-# Django settings for cacert_voting project.
+# Django settings for cacert_board project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -98,10 +98,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'cacert_voting.urls'
+ROOT_URLCONF = 'cacert_board.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'cacert_voting.wsgi.application'
+WSGI_APPLICATION = 'cacert_board.wsgi.application'
 
 from os import path
 PROJECT_PATH = path.abspath(path.dirname(__file__))
