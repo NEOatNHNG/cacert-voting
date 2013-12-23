@@ -1,0 +1,11 @@
+{% load url from future %}
+
+{% if motion_list %}
+	<ul>
+	{% for motion in motion_list %}
+		<li><a href="{% url 'motion_detail' motion.pk %}">{{motion}}</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No motions available</p>
+{% endif %}
