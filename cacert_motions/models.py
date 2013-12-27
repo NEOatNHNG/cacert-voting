@@ -7,6 +7,9 @@ class Motion(models.Model):
     title = models.CharField(max_length=255)
     withdrawn = models.BooleanField(default=False)
     proponent = models.ForeignKey(settings.AUTH_USER_MODEL)
+    voters = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                    through='Vote',
+                                    related_name='motion_voted_set')
     
     # Time stamps
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -102,6 +105,10 @@ class Vote(models.Model):
         return self.motion.number + ': ' + \
                self.get_vote_display() + ' from ' + \
                self.voter.first_name
+    
+    class Meta:
+        unique_together = ('motion', 'voter')
+
 
 class ProxyVote(Vote):
     proxy = models.ForeignKey(settings.AUTH_USER_MODEL)
