@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta, datetime
 
-import django.db.utils
+import django.core.exceptions
 
 from .models import Motion
 
@@ -191,11 +191,11 @@ class MotionTest(TestCase):
         m = self.create_motion()
         m.vote(True, self.alice, self.CLIENT_CERT)
         
-        with self.assertRaises(django.db.utils.IntegrityError,
+        with self.assertRaises(django.core.exceptions.ValidationError,
                                msg='Duplicate vote detected'):
             m.vote(False, self.alice, self.CLIENT_CERT)
         
-        with self.assertRaises(django.db.utils.IntegrityError,
+        with self.assertRaises(django.core.exceptions.ValidationError,
                                msg='Duplicate proxy vote detected'):
             m.proxy_vote(vote=False,
                          voter=self.alice,

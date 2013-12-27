@@ -85,7 +85,7 @@ class Motion(models.Model):
             self.number = prefix + unicode(
                 Motion.objects.filter(number__startswith=prefix).count() + 1
             )
-        self.clean_fields()
+        self.full_clean()
         return super(Motion, self).save(*args, **kwargs)
 
 
@@ -105,6 +105,10 @@ class Vote(models.Model):
         return self.motion.number + ': ' + \
                self.get_vote_display() + ' from ' + \
                self.voter.first_name
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(Vote, self).save(*args, **kwargs)
     
     class Meta:
         unique_together = ('motion', 'voter')
