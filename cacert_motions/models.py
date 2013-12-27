@@ -15,6 +15,64 @@ class Motion(models.Model):
     
     text = models.TextField()
     
+    def ayes(self):
+        ':rtype: models.query.QuerySet'
+        return self.vote_set.filter(vote=True)
+    
+    def nays(self):
+        ':rtype: models.query.QuerySet'
+        return self.vote_set.filter(vote=False)
+    
+    def abstains(self):
+        ':rtype: models.query.QuerySet'
+        return self.vote_set.filter(vote=None)
+    
+    def vote(self, vote, voter, certificate):
+        '''
+        Vote on the motion
+        :param vote: aye->True, naye->False, abstain->None
+        :type  vote: bool or None
+        :param voter: the `User` whos vote is cast
+        :type  voter: django.contrib.auth.models.User
+        :param certificate: Client certificate of the user that enters the vote
+        :type  certificate: unicode
+        :rtype: Vote
+        '''
+        v = Vote(
+            motion=self,
+            vote=vote,
+            voter=voter,
+            certificate=certificate,
+        )
+        v.save()
+        return v
+    
+    def proxy_vote(self, vote, voter, proxy, justification, certificate):
+        '''
+        Vote via proxy on the motion
+        :param vote: aye->True, naye->False, abstain->None
+        :type  vote: bool or None
+        :param voter: the `User` whos vote is cast
+        :type  voter: django.contrib.auth.models.User
+        :param proxy: the user that votes for the other user
+        :type  proxy: django.contrib.auth.models.User
+        :param justification: why a ProxyVote was cast instead of a normal vote
+        :type  justification: unicode
+        :param certificate: Client certificate of the user that enters the vote
+        :type certificate: unicode
+        :rtype: ProxyVote
+        '''
+        v = ProxyVote(
+            motion=self,
+            vote=vote,
+            voter=voter,
+            certificate=certificate,
+            proxy=proxy,
+            justification=justification,
+        )
+        v.save()
+        return v
+    
     def __unicode__(self):
         return self.number + ': ' + self.title
     

@@ -10,6 +10,20 @@ from .models import Motion
 
 class MotionTest(TestCase):
     
+    CLIENT_CERT = '''
+    -----BEGIN CERTIFICATE-----
+    MIIBmzCCAVWgAwIBAgIJAJ6nJQDxDeyKMA0GCSqGSIb3DQEBBQUAMDkxFTATBgNV
+    BAMMDEFsaWNlIENvb3BlcjEgMB4GCSqGSIb3DQEJARYRYWxpY2VAZXhhbXBsZS5j
+    b20wHhcNMTMxMjI3MTkyNzEyWhcNMjUwMzE1MTkyNzEyWjA5MRUwEwYDVQQDDAxB
+    bGljZSBDb29wZXIxIDAeBgkqhkiG9w0BCQEWEWFsaWNlQGV4YW1wbGUuY29tMEww
+    DQYJKoZIhvcNAQEBBQADOwAwOAIxAOskcOwI4jU07L/wsR1voVoPeWUdSmz6cfH1
+    TcLEw0DjKQ9qabImdAZazd7DcoLs8QIDAQABo1AwTjAdBgNVHQ4EFgQU71qcj7il
+    AbNhCTYsK8HXnHbX9mgwHwYDVR0jBBgwFoAU71qcj7ilAbNhCTYsK8HXnHbX9mgw
+    DAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAMxAH5jmSrviBKHmVkPhWtbb1mw
+    sfj0L1jexV4nekJLUHx1z7wzwOxGdRhnBAg/7E4EgA==
+    -----END CERTIFICATE-----
+    '''
+    
     @classmethod
     def setUpClass(cls):
         super(MotionTest, cls).setUpClass()
@@ -113,3 +127,61 @@ class MotionTest(TestCase):
             'Freshly added motion not present in database',
         )
     
+    def test_vote(self):
+        m = self.create_motion()
+        
+        # precondition
+        self.assertEqual(0, m.ayes().count())
+        self.assertEqual(0, m.nays().count())
+        self.assertEqual(0, m.abstains().count())
+        
+        m.vote(True, self.alice, self.CLIENT_CERT)
+        self.assertEqual(1, m.ayes().count())
+        self.assertEqual(0, m.nays().count())
+        self.assertEqual(0, m.abstains().count())
+        
+        m.vote(False, self.bob, self.CLIENT_CERT)
+        self.assertEqual(1, m.ayes().count())
+        self.assertEqual(1, m.nays().count())
+        self.assertEqual(0, m.abstains().count())
+        
+        m.vote(None, self.carole, self.CLIENT_CERT)
+        self.assertEqual(1, m.ayes().count())
+        self.assertEqual(1, m.nays().count())
+        self.assertEqual(1, m.abstains().count())
+        
+        m.proxy_vote(vote=True,
+                     voter=self.dave,
+                     proxy=self.alice,
+                     justification='Vote during board meeting',
+                     certificate=self.CLIENT_CERT)
+        self.assertEqual(2, m.ayes().count())
+        self.assertEqual(1, m.nays().count())
+        self.assertEqual(1, m.abstains().count())
+        
+        m.proxy_vote(vote=False,
+                     voter=self.erin,
+                     proxy=self.alice,
+                     justification='Vote during board meeting',
+                     certificate=self.CLIENT_CERT)
+        self.assertEqual(2, m.ayes().count())
+        self.assertEqual(2, m.nays().count())
+        self.assertEqual(1, m.abstains().count())
+        
+        m.proxy_vote(vote=True,
+                     voter=self.frank,
+                     proxy=self.bob,
+                     justification='Vote during board meeting',
+                     certificate=self.CLIENT_CERT)
+        self.assertEqual(3, m.ayes().count())
+        self.assertEqual(2, m.nays().count())
+        self.assertEqual(1, m.abstains().count())
+        
+        m.proxy_vote(vote=None,
+                     voter=self.gloria,
+                     proxy=self.alice,
+                     justification='Vote during board meeting',
+                     certificate=self.CLIENT_CERT)
+        self.assertEqual(3, m.ayes().count())
+        self.assertEqual(2, m.nays().count())
+        self.assertEqual(2, m.abstains().count())
