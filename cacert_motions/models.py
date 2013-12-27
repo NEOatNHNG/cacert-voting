@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from datetime import datetime
 
 class Motion(models.Model):
     number = models.CharField(max_length=13, primary_key=True, editable=False)
@@ -16,6 +17,15 @@ class Motion(models.Model):
     
     def __unicode__(self):
         return self.number + ': ' + self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.number:
+            prefix = u'm{now.year}{now.month}{now.day}.'.format(now=datetime.utcnow())
+            self.number = prefix + unicode(
+                Motion.objects.filter(number__startswith=prefix).count() + 1
+            )
+        self.clean_fields()
+        return super(Motion, self).save(*args, **kwargs)
 
 
 class Vote(models.Model):
