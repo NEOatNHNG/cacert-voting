@@ -137,6 +137,14 @@ class MotionTest(TestCase):
             Motion.objects.get(pk=m.pk),
             'Freshly added motion not present in database',
         )
+        
+        # Make sure a new motion gets a different number
+        m2 = self.create_motion(title='Second test motion')
+        self.assertNotEqual(
+            m.number,
+            m2.number,
+            'Duplicate motion number'
+        )
     
     def test_vote(self):
         '''
