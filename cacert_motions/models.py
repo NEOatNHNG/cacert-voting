@@ -77,7 +77,8 @@ class Motion(models.Model):
         return v
     
     def __unicode__(self):
-        return self.number + ': ' + self.title
+        withdrawn = u' [withdrawn]' if self.withdrawn else u''
+        return self.number + ': ' + self.title + withdrawn
     
     def save(self, *args, **kwargs):
         if not self.number:
