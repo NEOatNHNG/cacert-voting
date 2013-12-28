@@ -120,3 +120,9 @@ class ProxyVote(Vote):
     
     def __unicode__(self):
         return super(ProxyVote, self).__unicode__() + ' via ' + self.proxy.first_name
+    
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if self.voter == self.proxy:
+            raise ValidationError('You may not enter a proxy vote for yourself.')
+        super(ProxyVote, self).clean()

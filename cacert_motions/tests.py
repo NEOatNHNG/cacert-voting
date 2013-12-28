@@ -27,6 +27,9 @@ class MotionTest(TestCase):
     
     @classmethod
     def setUpClass(cls):
+        '''
+        Create some users
+        '''
         super(MotionTest, cls).setUpClass()
         
         cls.alice = User.objects.create_user(
@@ -92,6 +95,9 @@ class MotionTest(TestCase):
                       due=timezone.now() + timedelta(days=3),
                       **kwargs
                       ):
+        '''
+        Helper for easy creation of test motions
+        '''
         if not proponent:
             proponent=self.alice
         
@@ -106,6 +112,10 @@ class MotionTest(TestCase):
         return m
     
     def test_create_motion(self):
+        '''
+        Test if the motion creation works properly including generating
+        motion numbers
+        '''
         m = self.create_motion()
         
         # Make sure that motion index starts with 1
@@ -129,6 +139,9 @@ class MotionTest(TestCase):
         )
     
     def test_vote(self):
+        '''
+        Test if votes are properly counted
+        '''
         m = self.create_motion()
         
         # precondition
@@ -188,6 +201,9 @@ class MotionTest(TestCase):
         self.assertEqual(2, m.abstains().count())
     
     def test_duplicate_vote(self):
+        '''
+        Test if creating duplicate votes is blocked
+        '''
         m = self.create_motion()
         m.vote(True, self.alice, self.CLIENT_CERT)
         
@@ -200,5 +216,19 @@ class MotionTest(TestCase):
             m.proxy_vote(vote=False,
                          voter=self.alice,
                          proxy=self.bob,
+                         justification='Vote during board meeting',
+                         certificate=self.CLIENT_CERT)
+    
+    
+    def test_self_proxy(self):
+        '''
+        Test if creating proxy votes for oneself is blocked
+        '''
+        m = self.create_motion()
+        with self.assertRaises(django.core.exceptions.ValidationError,
+                               msg='Self-proxy detected'):
+            m.proxy_vote(vote=True,
+                         voter=self.alice,
+                         proxy=self.alice,
                          justification='Vote during board meeting',
                          certificate=self.CLIENT_CERT)
