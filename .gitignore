@@ -4,6 +4,9 @@
 # Ignore compiled python code
 *.py[co]
 
+# Ignore coverage HTML reports
+/htmlcov
+
 # Don't expose database settings, especially credentials and other stuff
 /cacert_board/private_settings.py
 
