@@ -82,7 +82,7 @@ class Motion(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.number:
-            prefix = u'm{now.year}{now.month}{now.day}.'.format(now=datetime.utcnow())
+            prefix = u'm{now:%Y%m%d}.'.format(now=datetime.utcnow())
             self.number = prefix + unicode(
                 Motion.objects.filter(number__startswith=prefix).count() + 1
             )

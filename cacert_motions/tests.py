@@ -122,12 +122,12 @@ class MotionTest(TestCase):
         with self.assertRaises(Motion.DoesNotExist,
                                msg='There is a motion starting with index "0"'):
             Motion.objects.get(
-                number=u'm{now.year}{now.month}{now.day}.0'.format(now=datetime.utcnow()),
+                number=u'm{now:%Y%m%d}.0'.format(now=datetime.utcnow()),
             )
         
         self.assertIsInstance(
             Motion.objects.get(
-                number=u'm{now.year}{now.month}{now.day}.1'.format(now=datetime.utcnow()),
+                number=u'm{now:%Y%m%d}.1'.format(now=datetime.utcnow()),
             ),
             Motion,
             'Motion with index "1" seems to be missing',
