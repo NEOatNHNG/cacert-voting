@@ -240,3 +240,22 @@ class MotionTest(TestCase):
                          proxy=self.alice,
                          justification='Vote during board meeting',
                          certificate=self.CLIENT_CERT)
+    
+    
+    def test_approved(self):
+        '''
+        Test whether approval status is calculated correctly
+        '''
+        fresh = self.create_motion()
+        self.assertIsNone(fresh.approved())
+        
+        old = self.create_motion(due=timezone.now() - timedelta(days=1))
+        
+        old.vote(True, self.alice, self.CLIENT_CERT)
+        self.assertIs(old.approved(), True)
+        
+        old.vote(False, self.bob, self.CLIENT_CERT)
+        old.vote(False, self.carole, self.CLIENT_CERT)
+        self.assertIs(old.approved(), False)
+        
+        #TODO: test for president's deciding vote on a draw

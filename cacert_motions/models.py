@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from datetime import datetime
+from django.utils import timezone
 
 class Motion(models.Model):
     number = models.CharField(max_length=13, primary_key=True, editable=False)
@@ -29,6 +30,19 @@ class Motion(models.Model):
     def abstains(self):
         ':rtype: models.query.QuerySet'
         return self.vote_set.filter(vote=None)
+    
+    def approved(self):
+        '''
+        Currently only implements simple majority votes
+        '''
+        if self.due >= timezone.now():
+            return None
+        if self.ayes().count() > self.nays().count():
+            return True
+        else:
+            #TODO: implement president casting the deciding vote on a draw
+            return False
+    approved.boolean = True
     
     def vote(self, vote, voter, certificate):
         '''
